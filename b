@@ -37,6 +37,13 @@ local hrp = character and character:FindFirstChild("HumanoidRootPart")
 local sharedEvent = game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("RemoteEvent")
 local PickupRemote = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Pickups"):WaitForChild("CollectPickup")
 
+for _, connection in pairs(getconnections(lplr.Idled)) do
+    if connection["Disable"] then
+        connection["Disable"](connection)
+    elseif connection["Disconnect"] then
+        connection["Disconnect"](connection)
+    end
+end
 local ChestsDB = require(game:GetService("ReplicatedStorage").Shared.Data.Chests)
 local Eggs = require(game:GetService("ReplicatedStorage").Shared.Data.Eggs)
 local MetalDetectorPath = game:GetService("ReplicatedStorage"):WaitForChild("Client"):WaitForChild("Gui"):WaitForChild("Frames"):WaitForChild("SummerEvent"):WaitForChild("MetalDetector")
