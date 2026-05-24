@@ -43,7 +43,7 @@ local MetalDetectorPath = game:GetService("ReplicatedStorage"):WaitForChild("Cli
 local MetalDetectorModule = require(MetalDetectorPath:WaitForChild("Input"))
 local LocalArtifactManager = require(MetalDetectorPath:WaitForChild("LocalArtifactManager"))
 local MultiplayerArtifactManager = require(MetalDetectorPath:WaitForChild("MultiplayerArtifactManager"))
-
+local CodesDB = require(game:GetService("ReplicatedStorage").Shared.Data.Codes)
 
 local EggList = {}
 for eggName, eggData in pairs(Eggs) do
@@ -375,6 +375,50 @@ ShopTab:CreateToggle({
                     }
                     game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
                     task.wait(1)
+                end
+                task.wait(10)
+              end
+          end)
+      end
+   end,
+})
+
+MainTab:CreateToggle({
+   Name = "Auto Claim Season Pass",
+   CurrentValue = false,
+   Flag = "AutoClaimSeasonPassFlag",
+   Callback = function(Value)
+      getgenv().AutoClaimSeasonPass = Value
+      if Value then
+          task.spawn(function()
+              while getgenv().AutoClaimSeasonPass do
+                local args = {
+                	"ClaimSeason"
+                }
+                game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+                task.wait(10)
+              end
+          end)
+      end
+   end,
+})
+
+MainTab:CreateToggle({
+   Name = "Auto Redeem All Codes",
+   CurrentValue = false,
+   Flag = "AutoRedeemCodesFlag",
+   Callback = function(Value)
+      getgenv().AutoRedeemCodes = Value
+      if Value then
+          task.spawn(function()
+              while getgenv().AutoRedeemCodes do
+                for i,v in pairs(CodesDB) do
+                   local args = {
+                   	    "RedeemCode",
+                        i
+                    }
+                    game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("RemoteFunction"):InvokeServer(unpack(args))
+                   task.wait(1)
                 end
                 task.wait(10)
               end
